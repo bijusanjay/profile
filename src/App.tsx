@@ -1,26 +1,66 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import {AppContextInterface, AppCtxProvider} from '../src/context/app-context'
+import AppRoutes from '../src/components/routes'
+import {
+  signInWithPopup,
+  GoogleAuthProvider,
+  signOut,
+  onAuthStateChanged,
+  getAuth,
+} from 'firebase/auth'
+import {auth} from './firebase'
+import {useState} from 'react'
 
-function App() {
+const App = () => {
+  const provider = new GoogleAuthProvider()
+
+  const [user, setuser] = useState<any>({})
+
+  onAuthStateChanged(auth, (currentUser) => {
+    setuser(currentUser)
+  })
+
+  const signUp = () => {
+    signInWithPopup(auth, provider)
+      .then((result) => {
+        // This gives you a Google Access Token.
+        const credential: any = GoogleAuthProvider.credentialFromResult(result)
+        const token = credential.accessToken
+        // The signed-in user info.
+
+        // console.log(auth.currentUser.email)
+      })
+      .catch((error) => {
+        const errorCode = error.code
+        const errorMessage = error.message
+        const email = error.email
+        // The AuthCredential type that was used.
+        const credential = GoogleAuthProvider.credentialFromError(error)
+        // ...
+      })
+  }
+
+  const logOut = () => {
+    signOut(auth)
+      .then(() => {
+        console.log('Sign-out successful')
+        // history.push('/')
+      })
+      .catch((error) => {
+        // An error happened.
+      })
+  }
+
+  const initialState: AppContextInterface = {
+    userProfile: user,
+    signUp: signUp,
+    logOut: logOut,
+  }
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+    <AppCtxProvider initialState={initialState}>
+      <AppRoutes />
+    </AppCtxProvider>
+  )
 }
 
-export default App;
+export default App

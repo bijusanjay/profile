@@ -1,6 +1,5 @@
-import './App.css'
-import './Portfolio.css'
-import Home from '@screens/home'
+import EditProfile from '../../screens/profile/edit'
+import Home from '../../screens/home'
 import {BrowserRouter as Router, Route, Routes} from 'react-router-dom'
 
 const AppRoutes = () => {
@@ -9,7 +8,7 @@ const AppRoutes = () => {
       <Routes>
         <Route path='/' element={<Home />} />
         {/* <Route path='profile' element={<Profile />} /> */}
-        {/* <Route path='' element={<EditProfile />} /> */}
+        <Route path='/profile/:id/edit' element={<EditProfile />} />
       </Routes>
     </Router>
   )

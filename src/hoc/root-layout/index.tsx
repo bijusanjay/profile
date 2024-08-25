@@ -1,23 +1,20 @@
-import {Layout} from 'antd'
-import Navbar from '@components/ui/navbar'
-import {ReactNode} from 'react'
+import Layout from '../../components/layout'
 
-interface RootLayoutProps {
-  children: ReactNode
-}
+interface WithLayoutProps {}
 
-export default function RootLayout({children}: RootLayoutProps) {
-  const excludedRoutes = ['/login', '/signup', '/profile']
-  const isExcludedRoute = excludedRoutes.includes('') //handle path
+const withDefaultLayout = <P extends object>(
+  Component: React.ComponentType<P>
+) => {
+  const WithDefaultLayout: React.FC<P & WithLayoutProps> = (props) => {
+    // const {userProfile, monetisationRoles, userRoles} = useAppContext()
 
-  if (isExcludedRoute) {
-    return <>{children}</>
+    return (
+      <Layout>
+        <Component {...(props as P)} />
+      </Layout>
+    )
   }
-
-  return (
-    <Layout>
-      <Navbar />
-      {children}
-    </Layout>
-  )
+  return WithDefaultLayout
 }
+
+export default withDefaultLayout

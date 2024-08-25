@@ -2,18 +2,14 @@
   "compilerOptions": {
     "target": "es5",
     "lib": ["dom", "dom.iterable", "esnext"],
+    "baseUrl": "src",
     "paths": {
-      "@*": ["./src/*"],
-      "@public/*": ["./public/*"],
-      "@components/*": ["./src/components/*"],
-      "@context/*": ["./src/context/*"],
-      "@clients/*": ["./src/clients/*"],
-      "@config/*": ["./src/config/*"],
-      "@network/*": ["./src/network/*"],
-      "@utils/*": ["./src/utils/*"],
-      "@screens/*": ["./src/screens/*"],
-      "@hooks/*": ["./src/hooks/*"],
-      "@types/*": ["./src/types/*"]
+      "@public/*": ["../public/*"],
+      "@components/*": ["components/*"],
+      "@context/*": ["context/*"],
+      "@clients/*": ["clients/*"],
+      "@screens/*": ["screens/*"],
+      "@hoc/*": ["hoc/*"]
     },
     "allowJs": true,
     "skipLibCheck": true,

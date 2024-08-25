@@ -1,5 +1,5 @@
 import {doc, onSnapshot} from 'firebase/firestore'
-import {db} from '@clients/firebase'
+import {db} from 'firebase'
 import {useEffect, useState} from 'react'
 import {useLocation} from 'react-router-dom'
 
