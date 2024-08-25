@@ -5,20 +5,18 @@ import {getAuth, onAuthStateChanged} from 'firebase/auth'
 import {useEffect} from 'react'
 import {useLocation} from 'react-router-dom'
 import withDefaultLayout from '../../../hoc/root-layout'
+import {Form, Input, Button} from 'antd'
 
 const EditProfile = () => {
   const auth = getAuth()
   const location = useLocation()
-  console.log(location?.pathname?.split('/')?.[2])
-
-  const [userData, setUserData] = useState([])
-
+  const [form] = Form.useForm()
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
       if (currentUser && currentUser.email) {
         const userDocRef = doc(db, 'users', currentUser.email)
         onSnapshot(userDocRef, (doc) => {
-          // setUserData(doc.data())
+          form.setFieldsValue(doc.data())
           console.log(doc.data())
         })
       }
@@ -26,7 +24,11 @@ const EditProfile = () => {
 
     // Cleanup the subscription when the component unmounts
     return () => unsubscribe()
-  }, [auth])
+  }, [auth, form])
+
+  const onFinish = (values: any) => {
+    console.log('Form Values:', values)
+  }
 
   // File upload
   //   const onFileChange = async (e) => {
@@ -64,7 +66,94 @@ const EditProfile = () => {
     //   })
   }
 
-  return <div></div>
+  return (
+    <Form form={form} layout='vertical' onFinish={onFinish}>
+      <Form.Item label='Name' name='name'>
+        <Input />
+      </Form.Item>
+      <Form.Item label='Email' name='email'>
+        <Input />
+      </Form.Item>
+      <Form.Item label='LinkedIn' name='linkedin'>
+        <Input />
+      </Form.Item>
+      <Form.Item label='Headline' name='headline'>
+        <Input />
+      </Form.Item>
+      <Form.Item label='College' name='college'>
+        <Input />
+      </Form.Item>
+      <Form.Item label='About' name='about'>
+        <Input.TextArea rows={4} />
+      </Form.Item>
+      <Form.Item label='Tech Stack' name='tech'>
+        <Input />
+      </Form.Item>
+      <Form.Item label='Skills' name='skills'>
+        <Input />
+      </Form.Item>
+      <Form.Item label='Degree' name='degree'>
+        <Input />
+      </Form.Item>
+      <Form.List name='experience'>
+        {(fields) => (
+          <>
+            {fields.map(({key, name, fieldKey, ...restField}) => (
+              <div key={key}>
+                <Form.Item
+                  {...restField}
+                  label='Company'
+                  name={[name, 'company']}
+                >
+                  <Input />
+                </Form.Item>
+                <Form.Item {...restField} label='Role' name={[name, 'role']}>
+                  <Input />
+                </Form.Item>
+                <Form.Item
+                  {...restField}
+                  label='Job Description'
+                  name={[name, 'job_desc']}
+                >
+                  <Input.TextArea rows={4} />
+                </Form.Item>
+              </div>
+            ))}
+          </>
+        )}
+      </Form.List>
+      <Form.List name='inputList'>
+        {(fields) => (
+          <>
+            {fields.map(({key, name, fieldKey, ...restField}) => (
+              <div key={key}>
+                <Form.Item
+                  {...restField}
+                  label='Project Title'
+                  name={[name, 'project_title']}
+                >
+                  <Input />
+                </Form.Item>
+                <Form.Item
+                  {...restField}
+                  label='Project Description'
+                  name={[name, 'project_desc']}
+                >
+                  <Input.TextArea rows={4} />
+                </Form.Item>
+              </div>
+            ))}
+          </>
+        )}
+      </Form.List>
+      <Form.Item label='GitHub' name='github'>
+        <Input />
+      </Form.Item>
+      <Button type='primary' htmlType='submit'>
+        Submit
+      </Button>
+    </Form>
+  )
 }
 
 export default withDefaultLayout(EditProfile)
